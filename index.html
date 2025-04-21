@@ -1,54 +1,33 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>塔羅 AR 掃描入口</title>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image.prod.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/examples/js/renderers/CSS3DRenderer.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image.prod.css" />
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #000;
-    }
-    #ar-container {
-      width: 100vw;
-      height: 100vh;
-    }
-  </style>
-</head>
-<body>
-  <div id="ar-container"></div>
+<html>
+  <head>
+    <title>AR 塔羅牌 demo</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image-aframe.prod.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image-aframe.prod.css" rel="stylesheet">
+    <style>
+      body { margin: 0; overflow: hidden; }
+      canvas { position: fixed; top: 0; left: 0; }
+    </style>
+  </head>
+  <body>
+    <a-scene
+      mindar-image="imageTargetSrc: onetargets.mind;"
+      color-space="sRGB"
+      embedded
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: true"
+      renderer="colorManagement: true, physicallyCorrectLights"
+    >
+      <a-assets>
+        <img id="target-image" src="one.jpg" />
+      </a-assets>
 
-  <script type="module">
-    import {loadImageTarget} from "https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/targets/loader.js";
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    const mindarThree = new window.MINDAR.IMAGE.MindARThree({
-      container: document.querySelector("#ar-container"),
-      imageTargetSrc: "./onetargets.mind",  // 改為你自己的 .mind 檔路徑
-    });
-
-    const {renderer, scene, camera} = mindarThree;
-
-    const anchor = mindarThree.addAnchor(0); // 第 0 個 marker 對應 .mind 中第一張圖
-
-    // 掃描成功就跳轉到你的刮刮頁
-    anchor.onTargetFound = () => {
-      console.log("掃描成功！跳轉頁面");
-      window.location.href = "index.html"; // 改為你刮刮頁的路徑
-    };
-
-    const start = async () => {
-      await mindarThree.start();
-      renderer.setAnimationLoop(() => {
-        renderer.render(scene, camera);
-      });
-    };
-    start();
-  </script>
-</body>
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-plane src="#target-image" height="1" width="1" position="0 0 0"></a-plane>
+      </a-entity>
+    </a-scene>
+  </body>
 </html>
