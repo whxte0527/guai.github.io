@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>塔羅 AR 掃描入口</title>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.136.0/examples/js/renderers/CSS3DRenderer.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image.prod.css" />
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #000;
+    }
+    #ar-container {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="ar-container"></div>
+
+  <script type="module">
+    import {loadImageTarget} from "https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/targets/loader.js";
+
+    const mindarThree = new window.MINDAR.IMAGE.MindARThree({
+      container: document.querySelector("#ar-container"),
+      imageTargetSrc: "./onetargets.mind",  // 改為你自己的 .mind 檔路徑
+    });
+
+    const {renderer, scene, camera} = mindarThree;
+
+    const anchor = mindarThree.addAnchor(0); // 第 0 個 marker 對應 .mind 中第一張圖
+
+    // 掃描成功就跳轉到你的刮刮頁
+    anchor.onTargetFound = () => {
+      console.log("掃描成功！跳轉頁面");
+      window.location.href = "index.html"; // 改為你刮刮頁的路徑
+    };
+
+    const start = async () => {
+      await mindarThree.start();
+      renderer.setAnimationLoop(() => {
+        renderer.render(scene, camera);
+      });
+    };
+    start();
+  </script>
+</body>
+</html>
