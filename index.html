@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
-    <title>塔羅 AR 互動</title>
+    <title>AR 掃描啟動</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
     <script src="https://cdn.jsdelivr.net/npm/aframe@1.2.0/dist/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.4/dist/mindar-image.prod.js"></script>
@@ -28,15 +28,21 @@
       loading-screen="enabled: true"
       arjs>
       
-      <a-assets>
-        <img id="card" src="card.png" />
-      </a-assets>
+      <a-assets></a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-      <a-entity mindar-image-target="targetIndex: 0">
-        <a-image src="#card" position="0 0 0" height="1" width="0.7"></a-image>
+      <!-- 掃描到 targetIndex: 0 時，觸發跳轉 -->
+      <a-entity mindar-image-target="targetIndex: 0" id="triggerTarget">
+        <a-box visible="false"></a-box>
       </a-entity>
     </a-scene>
+
+    <script>
+      AFRAME.scenes[0].addEventListener("targetFound", (e) => {
+        // 頁面跳轉到刮刮樂互動頁
+        window.location.href = "indexone.html";
+      });
+    </script>
   </body>
 </html>
